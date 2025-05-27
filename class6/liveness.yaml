@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    test: liveness
+  name: liveness-exec
+spec:
+  containers:
+  - name: liveness
+    image: registry.k8s.io/busybox:1.27.2
+    args:     #what command to execute when container starts
+    - /bin/sh
+    - -c
+    - touch /tmp/healthy; sleep 30; rm -f /tmp/healthy; sleep 600
+    livenessProbe:   #testing cat is you can see this file
+      exec:
+        command:
+        - cat
+        - /tmp/healthy
+      initialDelaySeconds: 5     # how often to test
+      periodSeconds: 5
